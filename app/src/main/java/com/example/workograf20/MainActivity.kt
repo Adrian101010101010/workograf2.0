@@ -3,6 +3,7 @@ package com.example.workograf20
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -22,7 +23,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button1: Button = findViewById(R.id.button1)
+        val button1 = Button(this).apply {
+            setBackgroundColor(Color.parseColor("#5caff5"))
+            val shape = GradientDrawable()
+            shape.cornerRadius = 30 * resources.displayMetrics.density
+            background = shape
+        }
+
+        //val button1: Button = findViewById(R.id.button1)
 
         button1.setOnClickListener {
             val intent = Intent(this, MainActivity2::class.java)
@@ -109,7 +117,6 @@ class MainActivity : AppCompatActivity() {
     private fun formatTime(timeInSeconds: Long): String {
         val hours = timeInSeconds / 3600
         val minutes = (timeInSeconds % 3600) / 60
-        val seconds = timeInSeconds % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        return String.format("%02d:%02d", hours, minutes)
     }
 }
