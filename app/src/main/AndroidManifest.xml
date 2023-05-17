@@ -15,13 +15,13 @@
             android:name=".MainActivityUser"
             android:exported="false" />
         <activity
-            android:name=".MainActivityRegister"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity2"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivityRegister"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

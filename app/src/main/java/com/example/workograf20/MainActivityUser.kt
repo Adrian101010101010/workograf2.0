@@ -54,7 +54,7 @@ class MainActivityUser : AppCompatActivity() {
 
         // змінюємо текст кнопки на "Stop"
         val startStopButton = findViewById<Button>(R.id.startStopButton)
-        startStopButton.text = "Stop"
+        startStopButton.text = "Start"
     }
 
     // зупиняємо таймер
@@ -63,8 +63,8 @@ class MainActivityUser : AppCompatActivity() {
         timer.cancel()
 
         // змінюємо текст кнопки на "Start"
-        val startStopButton = findViewById<Button>(R.id.startStopButton)
-        startStopButton.text = "Start"
+        val startStopButton = findViewById<Button>(R.id.resetButton)
+        startStopButton.text = "Reset"
     }
 
     // скидаємо таймер на початок
@@ -73,8 +73,8 @@ class MainActivityUser : AppCompatActivity() {
         updateTimer()
 
         // змінюємо текст кнопки на "Start"
-        val startStopButton = findViewById<Button>(R.id.startStopButton)
-        startStopButton.text = "Start"
+        val startStopButton = findViewById<Button>(R.id.resetButton)
+        startStopButton.text = "Stop"
     }
 
     // оновлюємо текст таймера згідно часу, що пройшов
