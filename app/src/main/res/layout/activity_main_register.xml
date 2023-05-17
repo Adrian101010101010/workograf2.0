@@ -24,23 +24,24 @@
         android:id="@+id/emailEditText"
         android:layout_width="300dp"
         android:layout_height="61dp"
+        android:background="@drawable/button_rounded"
         android:backgroundTint="#cde1f2"
         android:hint="@string/email"
         android:paddingStart="8dp"
-        android:background="@drawable/edittext_background1"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.276" />
+        app:layout_constraintVertical_bias="0.207"
+        tools:ignore="DuplicateClickableBoundsCheck" />
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="300dp"
         android:layout_height="61dp"
-        android:background="@drawable/edittext_background1"
+        android:background="@drawable/button_rounded"
         android:backgroundTint="#cde1f2"
         android:hint="Password"
         android:inputType="textPassword"
@@ -58,6 +59,7 @@
         android:layout_width="256dp"
         android:layout_height="53dp"
         android:backgroundTint="@color/yellow"
+        android:background="@drawable/button_stop"
         android:text="Register"
 
         app:layout_constraintBottom_toBottomOf="parent"

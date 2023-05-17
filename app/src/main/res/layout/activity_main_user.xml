@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray"
-    tools:context=".MainActivity">
+    tools:context=".MainActivityUser">
 
     <TextView
-        android:id="@+id/timerTextView"
+        android:id="@+id/timerTextView1"
         android:layout_width="286dp"
         android:layout_height="116dp"
         android:layout_below="@+id/startStopButton"
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.806"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timerTextView"
+        app:layout_constraintTop_toBottomOf="@+id/timerTextView1"
         app:layout_constraintVertical_bias="0.54" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.194"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timerTextView"
+        app:layout_constraintTop_toBottomOf="@+id/timerTextView1"
         app:layout_constraintVertical_bias="0.54" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -68,22 +68,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.625" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
-        android:layout_width="174dp"
-        android:layout_height="64dp"
-        android:backgroundTint="@color/yellow"
-        android:text="export sheet"
-        android:textColor="@color/white"
-        android:background="@drawable/edittext_background1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.778" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
