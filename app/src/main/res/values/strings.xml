@@ -4,4 +4,13 @@
     <string name="email">Email</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="statistic">Statistic</string>
+    <string name="export_sheet">export sheet</string>
+    <string name="_00_00">00:00</string>
+    <string name="back">back</string>
+    <string name="srart_new_period">srart new period</string>
+    <string name="register">Register</string>
+    <string name="password">Password</string>
 </resources>

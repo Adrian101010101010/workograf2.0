@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/yellow" /> <!-- Задайте колір заповнення кнопки тут -->
-    <corners android:radius="30dp" />
-    <stroke android:width="5dp"
-        android:color="@color/orange" />
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <ripple android:color="#FFC107">
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#C3A208" /> <!-- Задайте колір заповнення кнопки тут -->
+                    <corners android:radius="30dp" />
+                    <stroke android:width="5dp"
+                        android:color="@color/orange" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/yellow" /> <!-- Задайте колір заповнення кнопки тут -->
+            <corners android:radius="30dp" />
+            <stroke android:width="5dp"
+                android:color="@color/orange" />
+        </shape>
+    </item>
+</selector>

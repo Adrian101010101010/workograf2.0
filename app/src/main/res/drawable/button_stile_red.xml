@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/orange" /> <!-- Задайте колір заповнення кнопки тут -->
-    <corners android:radius="30dp" />
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <ripple android:color="#C83126">
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#C83126" />
+                    <corners android:radius="32dp" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/orange" />
+            <corners android:radius="32dp" />
+        </shape>
+    </item>
+</selector>

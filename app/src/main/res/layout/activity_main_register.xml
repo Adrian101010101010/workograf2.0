@@ -11,7 +11,8 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="@string/register"
+        android:textColor="#0288D1"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/emailEditText"
@@ -24,48 +25,52 @@
         android:id="@+id/emailEditText"
         android:layout_width="300dp"
         android:layout_height="61dp"
-        android:background="@drawable/button_rounded"
-        android:backgroundTint="#cde1f2"
+        android:background="@drawable/edittext_background"
         android:hint="@string/email"
         android:paddingStart="8dp"
-        android:textColor="@color/white"
+        android:textColor="#4f4f4f"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.207"
-        tools:ignore="DuplicateClickableBoundsCheck" />
+        tools:ignore="DuplicateClickableBoundsCheck,RtlSymmetry,TextFields"
+        android:autofillHints=""/>
+
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="300dp"
         android:layout_height="61dp"
-        android:background="@drawable/button_rounded"
-        android:backgroundTint="#cde1f2"
-        android:hint="Password"
+        android:background="@drawable/edittext_background"
+
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:paddingStart="8dp"
-        android:textColor="@color/gray_white"
+        android:textColor="#4f4f4f"
         app:layout_constraintBottom_toTopOf="@+id/registerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.655" />
+        app:layout_constraintVertical_bias="0.655"
+        android:autofillHints=""
+        tools:ignore="RtlSymmetry" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerButton"
         android:layout_width="256dp"
         android:layout_height="53dp"
-        android:backgroundTint="@color/yellow"
         android:background="@drawable/button_stop"
-        android:text="Register"
+        android:text="@string/register"
 
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.689" />
+        app:layout_constraintVertical_bias="0.689"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,4 +2,5 @@
 <resources>
     <item name="startButton" type="id" />
     <item name="stopButton" type="id" />
+    <item name="listView" type="id" />
 </resources>

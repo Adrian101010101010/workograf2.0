@@ -19,7 +19,7 @@
             android:layout_height="116dp"
             android:layout_below="@+id/startStopButton"
             android:layout_centerHorizontal="true"
-            android:text="00:00"
+            android:text="@string/_00_00"
             android:textColor="@color/white"
             android:textSize="100sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -27,30 +27,32 @@
             app:layout_constraintHorizontal_bias="0.700"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.249" />
+            app:layout_constraintVertical_bias="0.249"
+            tools:ignore="TextSizeCheck" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/startStopButton"
             android:layout_width="140dp"
             android:layout_height="60dp"
-            android:text="Start"
-            android:textSize="20sp"
-            android:backgroundTint="@color/blue"
             android:background="@drawable/button_rounded"
+            android:text="@string/start"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/button1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.806"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timerTextView"
-            app:layout_constraintVertical_bias="0.54" />
+            app:layout_constraintVertical_bias="0.54"
+            tools:ignore="TextContrastCheck" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/resetButton"
             android:layout_width="140dp"
             android:layout_height="60dp"
-            android:backgroundTint="@color/orange"
+
             android:textColor="@color/white"
-            android:text="Stop"
+            android:text="@string/stop"
             android:background="@drawable/button_stile_red"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/button1"
@@ -64,31 +66,31 @@
             android:id="@+id/button1"
             android:layout_width="174dp"
             android:layout_height="64dp"
-            android:backgroundTint="@color/yellow"
-            android:text="Statistic"
-            android:textColor="@color/white"
             android:background="@drawable/button_stop"
+            android:text="@string/statistic"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.625" />
+            app:layout_constraintVertical_bias="0.625"
+            tools:ignore="TextContrastCheck" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button2"
             android:layout_width="174dp"
             android:layout_height="64dp"
-            android:backgroundTint="@color/yellow"
-            android:text="export sheet"
-            android:textColor="@color/white"
             android:background="@drawable/button_stop"
+            android:text="@string/export_sheet"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.778" />
+            app:layout_constraintVertical_bias="0.778"
+            tools:ignore="TextContrastCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,6 +109,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:menu="@menu/nav_menu" />
+        app:menu="@menu/nav_menu"
+        tools:ignore="VisualLintBounds" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
