@@ -15,7 +15,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 
-// тут ми дізнаємося геолокацію
 @Suppress("DEPRECATION")
 class LocationMap : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient

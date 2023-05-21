@@ -1,5 +1,6 @@
 package com.example.workograf20
 
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -22,17 +23,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var openDrawerButton: Button
+    private lateinit var navigationView: NavigationView
 
     private var isTimerRunning = false
     private lateinit var timer: CountDownTimer
     private var timeInSeconds = 0L
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         drawerLayout = findViewById(R.id.drawerLayout)
-        val navigationView: NavigationView = findViewById(R.id.navigationView)
+        navigationView = findViewById(R.id.navigationView)
 
         val toggle = ActionBarDrawerToggle(
             this,
@@ -43,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        openDrawerButton = findViewById(R.id.openDrawerButton)
+        openDrawerButton = findViewById(R.id.openNavigationView)
         openDrawerButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
@@ -54,7 +57,6 @@ class MainActivity : AppCompatActivity() {
                     showExitConfirmationDialog()
                     true
                 }
-                // перегід на сторінку з гео локацією
                 R.id.nav_item2 -> {
                     val intent = Intent(this, LocationMap::class.java)
                     startActivity(intent)
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
 
         // Відновлення стану таймера при повторному вході в програму
         if (savedInstanceState != null) {
