@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
@@ -28,11 +29,13 @@ class MainActivity : AppCompatActivity() {
     private var isTimerRunning = false
     private lateinit var timer: CountDownTimer
     private var timeInSeconds = 0L
+    private lateinit var resetButton: Button
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
@@ -77,11 +80,16 @@ class MainActivity : AppCompatActivity() {
         val resetButton = findViewById<Button>(R.id.resetButton)
         resetButton.setOnClickListener {
             resetTimer()
+
         }
 
         val startStopButton = findViewById<Button>(R.id.startStopButton)
         startStopButton.setOnClickListener {
             if (isTimerRunning) {
+                // Зупиняємо таймер
+                resetTimer()
+            } else {
+                // Запускаємо таймер
                 startTimer()
             }
         }
@@ -119,6 +127,7 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -162,6 +171,10 @@ class MainActivity : AppCompatActivity() {
         timer.cancel()
         updateTimer()
 
+        if (::timer.isInitialized) {
+            timer.cancel()
+        }
+
         val startStopButton = findViewById<Button>(R.id.startStopButton)
         startStopButton.text = "Start"
     }
@@ -169,6 +182,10 @@ class MainActivity : AppCompatActivity() {
     private fun updateTimer() {
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
         timerTextView.text = formatTime(timeInSeconds)
+
+        if (::resetButton.isInitialized) {
+            resetButton.isEnabled = isTimerRunning
+        }
     }
 
     private fun formatTime(timeInSeconds: Long): String {
