@@ -26,14 +26,22 @@ class MainActivityUser : AppCompatActivity() {
         val startStopButton = findViewById<Button>(R.id.startStopButton)
         startStopButton.setOnClickListener {
             if (isTimerRunning) {
-                stopTimer()
-            } else {
                 startTimer()
             }
         }
 
-        // задаємо початковий вигляд таймера
-        timerTextView1.text = formatTime(timeInSeconds)
+        // Відновлення стану таймера при повторному вході в програму
+        if (savedInstanceState != null) {
+            isTimerRunning = savedInstanceState.getBoolean("isTimerRunning", false)
+            timeInSeconds = savedInstanceState.getLong("timeInSeconds", 0)
+            if (isTimerRunning) {
+                startTimer()
+            } else {
+                updateTimer()
+            }
+        } else {
+            updateTimer()
+        }
     }
 
     // розпочинаємо таймер
@@ -52,29 +60,14 @@ class MainActivityUser : AppCompatActivity() {
 
         timer.start()
 
-        // змінюємо текст кнопки на "Stop"
-        val startStopButton = findViewById<Button>(R.id.startStopButton)
-        startStopButton.text = "Start"
-    }
-
-    // зупиняємо таймер
-    private fun stopTimer() {
-        isTimerRunning = false
-        timer.cancel()
-
-        // змінюємо текст кнопки на "Start"
-        val startStopButton = findViewById<Button>(R.id.resetButton)
-        startStopButton.text = "Reset"
     }
 
     // скидаємо таймер на початок
     private fun resetTimer() {
         timeInSeconds = 0
         updateTimer()
-
-        // змінюємо текст кнопки на "Start"
-        val startStopButton = findViewById<Button>(R.id.resetButton)
-        startStopButton.text = "Stop"
+        isTimerRunning = false
+        timer.cancel()
     }
 
     // оновлюємо текст таймера згідно часу, що пройшов
@@ -88,5 +81,11 @@ class MainActivityUser : AppCompatActivity() {
         val hours = timeInSeconds / 3600
         val minutes = (timeInSeconds % 3600) / 60
         return String.format("%02d:%02d", hours, minutes)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("isTimerRunning", isTimerRunning)
+        outState.putLong("timeInSeconds", timeInSeconds)
     }
 }

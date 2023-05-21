@@ -8,50 +8,50 @@
     tools:context=".MainActivityUser">
 
     <TextView
-        android:id="@+id/timerTextView1"
-        android:layout_width="286dp"
-        android:layout_height="116dp"
-        android:layout_below="@+id/startStopButton"
-        android:layout_centerHorizontal="true"
-        android:text="@string/_00_00"
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:text="0:00:00"
         android:textColor="@color/white"
         android:textSize="100sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.700"
+        app:layout_constraintHorizontal_bias="0.432"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.249"
+        app:layout_constraintVertical_bias="0.07"
         tools:ignore="TextSizeCheck" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/startStopButton"
         android:layout_width="140dp"
         android:layout_height="60dp"
-        android:text="@string/start"
-        android:textSize="20sp"
-        android:textColor="@color/white"
         android:background="@drawable/button_rounded"
+        android:text="@string/start"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.806"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timerTextView1"
-        app:layout_constraintVertical_bias="0.54" />
+        app:layout_constraintHorizontal_bias="0.406"
+        app:layout_constraintStart_toEndOf="@+id/resetButton"
+        app:layout_constraintTop_toBottomOf="@+id/timerTextView"
+        app:layout_constraintVertical_bias="0.54"
+        tools:ignore="TextContrastCheck" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/resetButton"
         android:layout_width="140dp"
         android:layout_height="60dp"
-        android:textColor="@color/white"
-        android:text="@string/stop"
+
         android:background="@drawable/button_stile_red"
+        android:text="@string/stop"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.194"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timerTextView1"
+        app:layout_constraintTop_toBottomOf="@+id/timerTextView"
         app:layout_constraintVertical_bias="0.54" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -59,7 +59,6 @@
         android:layout_width="174dp"
         android:layout_height="64dp"
         android:background="@drawable/button_stop"
-
         android:text="@string/statistic"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,6 +66,8 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625" />
+        app:layout_constraintVertical_bias="0.625"
+        tools:ignore="TextContrastCheck" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

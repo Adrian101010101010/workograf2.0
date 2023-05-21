@@ -13,41 +13,27 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var openDrawerButton: Button
+
     private var isTimerRunning = false
     private lateinit var timer: CountDownTimer
     private var timeInSeconds = 0L
-    private var isTimerReset = true
-    private lateinit var drawerLayout: DrawerLayout
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button1 = Button(this).apply {
-            setBackgroundColor(Color.parseColor("#5caff5"))
-            val shape = GradientDrawable()
-            shape.cornerRadius = 30 * resources.displayMetrics.density
-            background = shape
-        }
-
-        //val button1: Button = findViewById(R.id.button1)
-
-       /* button1.setOnClickListener {
-            val intent = Intent(this, MainActivity2::class.java)
-            startActivity(intent)
-        }*/
-
+        drawerLayout = findViewById(R.id.drawerLayout)
         val navigationView: NavigationView = findViewById(R.id.navigationView)
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
 
-        // Встановити слухача для іконки гамбургера, щоб відкрити/закрити Navigation Drawer
         val toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
@@ -57,113 +43,49 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Встановити слухача для натискання пунктів меню Navigation Drawer
+        openDrawerButton = findViewById(R.id.openDrawerButton)
+        openDrawerButton.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+
         navigationView.setNavigationItemSelectedListener { menuItem ->
-            // Обробка натискання пунктів меню
             when (menuItem.itemId) {
                 R.id.nav_item1 -> {
                     showExitConfirmationDialog()
-                    // Дії для пункту меню "Item 1"
-                    // Виклик фрагменту або сторінки, пов'язаної з цим пунктом меню
                     true
                 }
+                // перегід на сторінку з гео локацією
                 R.id.nav_item2 -> {
-                    // Дії для пункту меню "Item 2"
-                    // Виклик фрагменту або сторінки, пов'язаної з цим пунктом меню
+                    val intent = Intent(this, LocationMap::class.java)
+                    startActivity(intent)
                     true
                 }
-                // Додайте інші пункти меню за необхідністю
                 else -> false
             }
         }
 
-        val button2: Button = findViewById(R.id.button2)
-
-
-        button2.setOnClickListener {
-            val intent = Intent(this, MainActivityUser::class.java)
-            startActivity(intent)
+        // Відновлення стану таймера при повторному вході в програму
+        if (savedInstanceState != null) {
+            isTimerRunning = savedInstanceState.getBoolean("isTimerRunning", false)
+            timeInSeconds = savedInstanceState.getLong("timeInSeconds", 0)
         }
 
-            val timerTextView = findViewById<TextView>(R.id.timerTextView)
-            val resetButton = findViewById<Button>(R.id.resetButton)
-            val startStopButton = findViewById<Button>(R.id.startStopButton)
+        val timerTextView = findViewById<TextView>(R.id.timerTextView)
+        val resetButton = findViewById<Button>(R.id.resetButton)
+        resetButton.setOnClickListener {
+            resetTimer()
+        }
 
-            resetButton.setOnClickListener {
-                if (isTimerReset) {
-                    stopTimer()
-                } else {
-                    resetTimer()
-                }
-                isTimerReset = !isTimerReset
+        val startStopButton = findViewById<Button>(R.id.startStopButton)
+        startStopButton.setOnClickListener {
+            if (isTimerRunning) {
+                startTimer()
             }
-
-            startStopButton.setOnClickListener {
-                if (isTimerRunning) {
-                    stopTimer()
-                } else {
-                    startTimer()
-                }
-            }
-
-            // задаємо початковий вигляд таймера
-            timerTextView.text = formatTime(0)
         }
 
-        // розпочинаємо таймер
-        private fun startTimer() {
-            isTimerRunning = true
+        timerTextView.text = formatTime(timeInSeconds)
+    }
 
-            // створюємо новий об'єкт CountDownTimer
-            timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    timeInSeconds++
-                    updateTimer()
-                }
-
-                override fun onFinish() {}
-            }
-
-            timer.start()
-
-            // змінюємо текст кнопки на "Stop"
-            val startStopButton = findViewById<Button>(R.id.startStopButton)
-            startStopButton.text = "Start"
-        }
-
-        // зупиняємо таймер
-        private fun stopTimer() {
-            isTimerRunning = false
-            timer.cancel()
-
-            // змінюємо текст кнопки на "Start"
-            val startStopButton = findViewById<Button>(R.id.resetButton)
-            startStopButton.text = "Reset"
-        }
-
-        // скидаємо таймер на початок
-        private fun resetTimer() {
-            timeInSeconds = 0
-            updateTimer()
-
-            // змінюємо текст кнопки на "Start"
-            val startStopButton = findViewById<Button>(R.id.resetButton)
-            startStopButton.text = "Stop"
-        }
-
-        // оновлюємо текст таймера згідно часу, що пройшов
-        private fun updateTimer() {
-            val timerTextView = findViewById<TextView>(R.id.timerTextView)
-            timerTextView.text = formatTime(timeInSeconds)
-        }
-
-        // форматуємо час у вигляді "гг:хх:сс"
-        private fun formatTime(timeInSeconds: Long): String {
-            val hours = timeInSeconds / 3600
-            val minutes = (timeInSeconds % 3600) / 60
-            val seconds = timeInSeconds % 60
-            return String.format("%02d:%02d", hours, minutes)
-        }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
@@ -192,5 +114,64 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("No", null)
             .show()
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("isTimerRunning", isTimerRunning)
+        outState.putLong("timeInSeconds", timeInSeconds)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateTimer()
+    }
+
+    private fun startTimer() {
+        isTimerRunning = true
+
+        timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeInSeconds++
+                updateTimer()
+            }
+
+            override fun onFinish() {}
+        }
+
+        timer.start()
+
+        val startStopButton = findViewById<Button>(R.id.startStopButton)
+        startStopButton.text = "Stop"
+    }
+
+    private fun resetTimer() {
+        timeInSeconds = 0
+        isTimerRunning = false
+        timer.cancel()
+        updateTimer()
+
+        val startStopButton = findViewById<Button>(R.id.startStopButton)
+        startStopButton.text = "Start"
+    }
+
+    private fun updateTimer() {
+        val timerTextView = findViewById<TextView>(R.id.timerTextView)
+        timerTextView.text = formatTime(timeInSeconds)
+    }
+
+    private fun formatTime(timeInSeconds: Long): String {
+        val hours = timeInSeconds / 3600
+        val minutes = (timeInSeconds % 3600) / 60
+        val seconds = timeInSeconds % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 }

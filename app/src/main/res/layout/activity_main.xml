@@ -15,19 +15,18 @@
 
         <TextView
             android:id="@+id/timerTextView"
-            android:layout_width="286dp"
-            android:layout_height="116dp"
-            android:layout_below="@+id/startStopButton"
-            android:layout_centerHorizontal="true"
-            android:text="@string/_00_00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="104dp"
+            android:text="0:00:00"
             android:textColor="@color/white"
             android:textSize="100sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.700"
+            app:layout_constraintHorizontal_bias="0.432"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.249"
+            app:layout_constraintVertical_bias="0.07"
             tools:ignore="TextSizeCheck" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -40,8 +39,8 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/button1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.806"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.406"
+            app:layout_constraintStart_toEndOf="@+id/resetButton"
             app:layout_constraintTop_toBottomOf="@+id/timerTextView"
             app:layout_constraintVertical_bias="0.54"
             tools:ignore="TextContrastCheck" />
@@ -51,9 +50,9 @@
             android:layout_width="140dp"
             android:layout_height="60dp"
 
-            android:textColor="@color/white"
-            android:text="@string/stop"
             android:background="@drawable/button_stile_red"
+            android:text="@string/stop"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/button1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,5 +110,24 @@
         app:layout_constraintVertical_bias="0.0"
         app:menu="@menu/nav_menu"
         tools:ignore="VisualLintBounds" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Додайте тут ваш основний контент -->
+
+        <Button
+            android:id="@+id/openDrawerButton"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/baseline_format_list_bulleted_24"
+            android:onClick="openDrawer"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
