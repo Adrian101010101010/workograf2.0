@@ -2,9 +2,15 @@ package com.example.workograf20
 
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -25,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var openDrawerButton: Button
     private lateinit var navigationView: NavigationView
+    private lateinit var connectivityReceiver: BroadcastReceiver
+    private lateinit var alertDialog: AlertDialog
 
     private var isTimerRunning = false
     private lateinit var timer: CountDownTimer
@@ -48,6 +56,9 @@ class MainActivity : AppCompatActivity() {
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        val navigationView = findViewById<NavigationView>(R.id.navigationView)
+        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK))
 
         openDrawerButton = findViewById(R.id.openNavigationView)
         openDrawerButton.setOnClickListener {
@@ -95,6 +106,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         timerTextView.text = formatTime(timeInSeconds)
+
+        // Create and configure the alert dialog
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setTitle("No Internet Connection")//No Internet Connection
+            .setMessage("Будь ласка підключілься до інтернету шоб я і надалі мав можливість зливати ваші приватні дані (⓿_⓿)")//Please check your internet connection and try again.
+            .setCancelable(false)
+        // .setPositiveButton("OK") { _, _ ->
+        // Handle OK button click if needed
+        // }
+
+        alertDialog = dialogBuilder.create()
+
+        // Initialize the connectivity receiver
+        connectivityReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (!isInternetConnected()) {
+                    showNoInternetDialog()
+                } else {
+                    dismissNoInternetDialog()
+                }
+            }
+        }
+
+        // Register the connectivity receiver
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(connectivityReceiver, filter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -193,5 +230,30 @@ class MainActivity : AppCompatActivity() {
         val minutes = (timeInSeconds % 3600) / 60
         val seconds = timeInSeconds % 60
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
+//усі методи що стосуються сповіщення інтернет
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister the connectivity receiver
+        unregisterReceiver(connectivityReceiver)
+    }
+
+    private fun showNoInternetDialog() {
+        if (!alertDialog.isShowing) {
+            alertDialog.show()
+        }
+    }
+
+    private fun dismissNoInternetDialog() {
+        if (alertDialog.isShowing) {
+            alertDialog.dismiss()
+        }
+    }
+
+    private fun isInternetConnected(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
     }
 }

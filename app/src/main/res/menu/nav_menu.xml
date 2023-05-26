@@ -5,12 +5,12 @@
         <item
             android:id="@+id/nav_item1"
 
-            android:title="Item 1" />
+            android:title="Log out" />
 
         <item
             android:id="@+id/nav_item2"
 
-            android:title="Item 2" />
+            android:title="geolocation verification" />
 
         <!-- Додайте інші пункти меню за необхідністю -->
 
