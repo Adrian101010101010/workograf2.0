@@ -20,6 +20,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -39,11 +40,10 @@ class MainActivity : AppCompatActivity() {
     private var timeInSeconds = 0L
     private lateinit var resetButton: Button
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
         val navigationView = findViewById<NavigationView>(R.id.navigationView)
-        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK))
 
         openDrawerButton = findViewById(R.id.openNavigationView)
         openDrawerButton.setOnClickListener {
@@ -185,32 +184,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startTimer() {
-        isTimerRunning = true
+        if (!isTimerRunning) {
+            isTimerRunning = true
 
-        timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                timeInSeconds++
-                updateTimer()
+            timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    timeInSeconds++
+                    updateTimer()
+                }
+
+                override fun onFinish() {}
             }
 
-            override fun onFinish() {}
+            timer.start()
+        } else {
+            timer.cancel()
+            updateTimer()
         }
-
-        timer.start()
 
         val startStopButton = findViewById<Button>(R.id.startStopButton)
         startStopButton.text = "Stop"
+
+        val resetButton = findViewById<Button>(R.id.resetButton)
+        resetButton.isEnabled = isTimerRunning
     }
 
     private fun resetTimer() {
-        timeInSeconds = 0
         isTimerRunning = false
         timer.cancel()
+        timeInSeconds = 0
         updateTimer()
 
-        if (::timer.isInitialized) {
-            timer.cancel()
-        }
+        val timerTextView = findViewById<TextView>(R.id.timerTextView)
+        timerTextView.text = formatTime(timeInSeconds)
 
         val startStopButton = findViewById<Button>(R.id.startStopButton)
         startStopButton.text = "Start"
@@ -220,9 +226,8 @@ class MainActivity : AppCompatActivity() {
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
         timerTextView.text = formatTime(timeInSeconds)
 
-        if (::resetButton.isInitialized) {
-            resetButton.isEnabled = isTimerRunning
-        }
+        val resetButton = findViewById<Button>(R.id.resetButton)
+        resetButton.isEnabled = isTimerRunning
     }
 
     private fun formatTime(timeInSeconds: Long): String {
