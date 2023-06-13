@@ -1,11 +1,22 @@
 package com.example.workograf20
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.hardware.fingerprint.FingerprintManager
+import android.os.CancellationSignal
+import android.content.DialogInterface
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.appcompat.app.AlertDialog
+
 
 class MainActivityRegister : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_register)
@@ -29,6 +40,50 @@ class MainActivityRegister : AppCompatActivity() {
             if (intent != null) {
                 startActivity(intent)
             }
+        }
+
+
+        val biometricManager = BiometricManager.from(this)
+        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+            // Device supports biometric authentication
+
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Touch ID Authentication")
+                .setDescription("Place your finger on the fingerprint sensor to authenticate")
+                .setNegativeButtonText("Cancel")
+                .build()
+
+            val biometricPrompt = BiometricPrompt(this, mainExecutor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    // Authentication successful
+                    val intent = Intent(this@MainActivityRegister, MainActivity::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    // Authentication error
+                    // Handle error accordingly
+                }
+            })
+
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            // Device does not support biometric authentication
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle("Biometric Authentication")
+                .setMessage("фу цей телефон навіть touch id викинь його і купи iPhone") //Your device does not support biometric authentication. Continue with another authentication method?
+                .setPositiveButton("OK") { dialog, _ ->
+                    // Handle OK button click
+                    // You can navigate to another activity or perform other actions here
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    // Handle Cancel button click
+                    dialog.dismiss()
+                }
+                .create()
+
+            alertDialog.show()
         }
     }
 }
