@@ -85,5 +85,41 @@ class MainActivityRegister : AppCompatActivity() {
 
             alertDialog.show()
         }
+
+        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+            // Пристрій підтримує біометричну аутентифікацію
+
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Face ID Authentication")
+                .setDescription("Place your face in front of the front camera to authenticate")
+                .setNegativeButtonText("Cancel")
+                .build()
+
+            val biometricPrompt = BiometricPrompt(this, mainExecutor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    // Аутентифікація пройшла успішно
+                    val intent = Intent(this@MainActivityRegister, MainActivityUser::class.java)
+                    startActivity(intent)
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    // Виникла помилка аутентифікації
+                    // Обробте помилку відповідним чином
+                }
+            })
+
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            // Пристрій не підтримує біометричну аутентифікацію
+            // Ви можете використовувати інший метод аутентифікації або повідомити користувача про відсутність підтримки
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle("No Biometric Support")
+                .setMessage("Your device does not support biometric authentication.")
+                .setPositiveButton("OK") { _, _ ->
+                    // Обробка події натискання кнопки OK
+                }
+                .create()
+            alertDialog.show()
+        }
     }
 }
