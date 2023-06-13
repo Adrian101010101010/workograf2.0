@@ -11,17 +11,19 @@ class MainActivityRegister : AppCompatActivity() {
         setContentView(R.layout.activity_main_register)
         val registerButton: Button = findViewById(R.id.registerButton)
         val passwordEditText: EditText = findViewById(R.id.passwordEditText)
+        val emailEditText: EditText = findViewById(R.id.emailEditText)
 
         registerButton.setOnClickListener {
             val passwordValue = passwordEditText.text.toString()
-            val intent = if (passwordValue == "Лев лох") {
-                Intent(this, MainActivity::class.java)
-            } else if (passwordValue == "Лев100%ЛОХ") {
-                Intent(this,MainActivityUser::class.java)
-            } else {
-                // Виконується якщо введена інша цифра або текст
-                // Можна додати обробку помилки або інше поведінку
-                null
+            val emailValue = emailEditText.text.toString()
+
+            val intent = when {
+                passwordValue == "Лев лох" && emailValue == "1" -> Intent(this, MainActivity::class.java)
+                passwordValue == "Лев100%ЛОХ" && emailValue == "2" -> Intent(this, MainActivityUser::class.java)
+                passwordValue == "АдріанТоп" && emailValue == "3" -> Intent(this, MainActivityUser1::class.java)
+                passwordValue == "Володя красавчік " && emailValue == "4" -> Intent(this, MainActivityUser2::class.java)
+                passwordValue == "Лев машина" && emailValue == "5" -> Intent(this, MainActivityUser3::class.java)
+                else -> null // Виконується, якщо введений неправильний пароль або електронна пошта
             }
 
             if (intent != null) {
