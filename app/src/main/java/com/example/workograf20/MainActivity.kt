@@ -45,6 +45,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val button1 = findViewById<Button>(R.id.button1)
+        button1.setOnClickListener {
+            val intent = Intent(this, StatisticsActivityEmployer::class.java)
+            startActivity(intent)
+        }
+
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
 
