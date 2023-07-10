@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -68,7 +70,8 @@ class MainActivityUser : AppCompatActivity() {
         toggle.syncState()
 
         val navigationView = findViewById<NavigationView>(R.id.navigationView)
-        val buttonTextColor = ContextCompat.getColorStateList(this, R.drawable.left_menu_text)
+        val buttonTextColor = ColorStateList.valueOf(Color.WHITE)
+       // val buttonTextColor = ContextCompat.getColorStateList(this, R.drawable.left_menu_text)
         navigationView.itemTextColor = buttonTextColor
 
         openDrawerButton = findViewById(R.id.openNavigationView)
