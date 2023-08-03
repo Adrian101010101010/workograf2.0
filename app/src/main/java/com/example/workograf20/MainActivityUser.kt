@@ -23,6 +23,9 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import android.os.Handler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
 class MainActivityUser : AppCompatActivity() {
@@ -40,13 +43,12 @@ class MainActivityUser : AppCompatActivity() {
 
     private val handler = Handler()
     private val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
-
+    private val dbWriter = DatabaseIsWrite()
 
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_user)
-
         // Отримайте останнє значення таймера з попередньої активності (якщо таке є)
         timeInSeconds = intent.getLongExtra("timeInSeconds", 0)
 
@@ -232,18 +234,24 @@ class MainActivityUser : AppCompatActivity() {
     private fun resetTimer() {
         val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
 
+        val prevTimeInSeconds = timeInSeconds // Зберігаємо попереднє значення часу
+
         isTimerRunning = false
         timer.cancel()
 
         handler.postDelayed({
             timeInSeconds = 0
             updateTimer()
-
             val timerTextView = findViewById<TextView>(R.id.timerTextView)
             timerTextView.text = formatTime(timeInSeconds)
 
             val startStopButton = findViewById<Button>(R.id.startStopButton)
             startStopButton.text = "Start"
+
+            // Викликаємо метод для запису в базу даних, передаючи попереднє значення часу
+            GlobalScope.launch(Dispatchers.IO) {
+                dbWriter.databaseIsWrite(6, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds)
+            }
         }, resetDelay)
     }
 
