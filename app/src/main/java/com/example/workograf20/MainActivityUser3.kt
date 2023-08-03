@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -23,12 +21,10 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import android.os.Handler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
-class MainActivityUser : AppCompatActivity() {
+class MainActivityUser3 : AppCompatActivity() {
+
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var openDrawerButton: Button
     private lateinit var navigationView: NavigationView
@@ -37,25 +33,25 @@ class MainActivityUser : AppCompatActivity() {
 
     private var isTimerRunning = false
     private lateinit var timer: CountDownTimer
-    private var timeInSeconds = 0L
+    private var timeInSeconds3 = 0L
     private lateinit var resetButton: Button
 
 
     private val handler = Handler()
     private val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
-    private val dbWriter = DatabaseIsWrite()
 
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_user)
+        setContentView(R.layout.activity_main_user3)
+
         // Отримайте останнє значення таймера з попередньої активності (якщо таке є)
-        timeInSeconds = intent.getLongExtra("timeInSeconds", 0)
+        timeInSeconds3 = intent.getLongExtra("timeInSeconds3", 0)
 
         val button1 = findViewById<Button>(R.id.button1)
         button1.setOnClickListener {
-            val intent = Intent(this, StatisticsActivity::class.java)
-            intent.putExtra("timeInSeconds", timeInSeconds)
+            val intent = Intent(this, StatisticsActivity3::class.java)
+            intent.putExtra("timeInSeconds3", timeInSeconds3)
             startActivity(intent)
         }
 
@@ -72,8 +68,7 @@ class MainActivityUser : AppCompatActivity() {
         toggle.syncState()
 
         val navigationView = findViewById<NavigationView>(R.id.navigationView)
-        val buttonTextColor = ColorStateList.valueOf(Color.WHITE)
-       // val buttonTextColor = ContextCompat.getColorStateList(this, R.drawable.left_menu_text)
+        val buttonTextColor = ContextCompat.getColorStateList(this, R.drawable.left_menu_text)
         navigationView.itemTextColor = buttonTextColor
 
         openDrawerButton = findViewById(R.id.openNavigationView)
@@ -100,7 +95,7 @@ class MainActivityUser : AppCompatActivity() {
         // Відновлення стану таймера при повторному вході в програму
         if (savedInstanceState != null) {
             isTimerRunning = savedInstanceState.getBoolean("isTimerRunning", false)
-            timeInSeconds = savedInstanceState.getLong("timeInSeconds", 0)
+            timeInSeconds3 = savedInstanceState.getLong("timeInSeconds3", 0)
         }
 
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
@@ -121,7 +116,7 @@ class MainActivityUser : AppCompatActivity() {
             }
         }
 
-        timerTextView.text = formatTime(timeInSeconds)
+        timerTextView.text = formatTime(timeInSeconds3)
 
         // Create and configure the alert dialog
         val dialogBuilder = AlertDialog.Builder(this)
@@ -192,7 +187,7 @@ class MainActivityUser : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean("isTimerRunning", isTimerRunning)
-        outState.putLong("timeInSeconds", timeInSeconds)
+        outState.putLong("timeInSeconds3", timeInSeconds3)
     }
 
     override fun onResume() {
@@ -206,7 +201,7 @@ class MainActivityUser : AppCompatActivity() {
 
             timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
-                    timeInSeconds++
+                    timeInSeconds3++
                     updateTimer()
                 }
 
@@ -234,39 +229,33 @@ class MainActivityUser : AppCompatActivity() {
     private fun resetTimer() {
         val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
 
-        val prevTimeInSeconds = timeInSeconds // Зберігаємо попереднє значення часу
-
         isTimerRunning = false
         timer.cancel()
 
         handler.postDelayed({
-            timeInSeconds = 0
+            timeInSeconds3 = 0
             updateTimer()
+
             val timerTextView = findViewById<TextView>(R.id.timerTextView)
-            timerTextView.text = formatTime(timeInSeconds)
+            timerTextView.text = formatTime(timeInSeconds3)
 
             val startStopButton = findViewById<Button>(R.id.startStopButton)
             startStopButton.text = "Start"
-
-            // Викликаємо метод для запису в базу даних, передаючи попереднє значення часу
-            GlobalScope.launch(Dispatchers.IO) {
-                dbWriter.databaseIsWrite(6, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds)
-            }
         }, resetDelay)
     }
 
     private fun updateTimer() {
         val timerTextView = findViewById<TextView>(R.id.timerTextView)
-        timerTextView.text = formatTime(timeInSeconds)
+        timerTextView.text = formatTime(timeInSeconds3)
 
         val resetButton = findViewById<Button>(R.id.resetButton)
         resetButton.isEnabled = isTimerRunning
     }
 
-    private fun formatTime(timeInSeconds: Long): String {
-        val hours = timeInSeconds / 3600
-        val minutes = (timeInSeconds % 3600) / 60
-        val seconds = timeInSeconds % 60
+    private fun formatTime(timeInSeconds3: Long): String {
+        val hours = timeInSeconds3 / 3600
+        val minutes = (timeInSeconds3 % 3600) / 60
+        val seconds = timeInSeconds3 % 60
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
     //усі методи що стосуються сповіщення інтернет
@@ -296,8 +285,8 @@ class MainActivityUser : AppCompatActivity() {
     }
 
     private fun navigateToStatisticsPage() {
-        val intent = Intent(this, StatisticsActivity::class.java)
-        intent.putExtra("timeInSeconds", timeInSeconds)
+        val intent = Intent(this, StatisticsActivity3::class.java)
+        intent.putExtra("timeInSeconds3", timeInSeconds3)
         startActivity(intent)
     }
 

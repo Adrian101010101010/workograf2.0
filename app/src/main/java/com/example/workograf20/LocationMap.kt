@@ -25,8 +25,8 @@ class LocationMap : AppCompatActivity() {
 
 
     companion object {
-        private const val TARGET_LATITUDE = 49.777810 // Задайте цільову широту
-        private const val TARGET_LONGITUDE = 23.947857 // Задайте цільову довготу
+        private const val TARGET_LATITUDE = 49.834870 // Задайте цільову широту
+        private const val TARGET_LONGITUDE = 24.021730 // Задайте цільову довготу
 
         private const val PERMISSION_REQUEST_CODE = 123
     }
@@ -82,9 +82,9 @@ class LocationMap : AppCompatActivity() {
                     val distance = calculateDistance(currentLocation, targetLocation)
 
                     if (distance <= 1000) {
-                        textView.text = "Я в зоні"
+                        textView.text = "On location"
                     } else {
-                        textView.text = "Я не в зоні"
+                        textView.text = "Not on location"
                     }
                 }
             }
