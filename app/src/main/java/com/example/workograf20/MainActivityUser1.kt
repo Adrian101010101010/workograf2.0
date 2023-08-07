@@ -21,6 +21,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import android.os.Handler
+import android.widget.Toast
+import java.util.*
 
 @Suppress("DEPRECATION")
 class MainActivityUser1 : AppCompatActivity() {
@@ -196,35 +198,60 @@ class MainActivityUser1 : AppCompatActivity() {
     }
 
     private fun startTimer() {
-        if (!isTimerRunning) {
-            isTimerRunning = true
+        val currentTime = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+        }
 
-            timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    timeInSeconds1++
-                    updateTimer()
+        val startHour = 8 // 8 AM
+        val endHour = 20 // 8 PM
+
+        val currentHour = currentTime.get(Calendar.HOUR_OF_DAY)
+
+        if (currentHour in startHour..endHour) {
+            // Почати таймер тільки в заданому діапазоні годин
+            if (!isTimerRunning) {
+                isTimerRunning = true
+
+                timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        timeInSeconds1++
+                        updateTimer()
+
+                        val currentTime = Calendar.getInstance()
+                        val resetHour = 20 // 8 PM
+
+                        if (currentTime.get(Calendar.HOUR_OF_DAY) >= resetHour) {
+                            resetTimer()
+                        }
+                    }
+
+                    override fun onFinish() {}
                 }
 
-                override fun onFinish() {}
+                timer.start()
+            } else {
+                timer.cancel()
+                updateTimer()
             }
 
-            timer.start()
+            val statisticsButton = findViewById<Button>(R.id.button1)
+            statisticsButton.setOnClickListener {
+                navigateToStatisticsPage() // Передати timerValue як параметр
+            }
+
+            val startStopButton = findViewById<Button>(R.id.startStopButton)
+            startStopButton.text = "Stop"
+
+            val resetButton = findViewById<Button>(R.id.resetButton)
+            resetButton.isEnabled = isTimerRunning
         } else {
-            timer.cancel()
-            updateTimer()
+            // Не починати таймер поза заданим діапазоном годин
+            val message = "The timer can only be started between $startHour:00 and $endHour:00."
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            resetTimer()
         }
-
-        val statisticsButton = findViewById<Button>(R.id.button1)
-        statisticsButton.setOnClickListener {
-            navigateToStatisticsPage() // Pass the timerValue as a parameter
-        }
-
-        val startStopButton = findViewById<Button>(R.id.startStopButton)
-        startStopButton.text = "Stop"
-
-        val resetButton = findViewById<Button>(R.id.resetButton)
-        resetButton.isEnabled = isTimerRunning
     }
+
 
     private fun resetTimer() {
         val resetDelay = 5000L // Затримка скидання таймера в мілісекундах

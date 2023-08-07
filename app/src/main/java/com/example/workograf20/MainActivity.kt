@@ -14,6 +14,7 @@ import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -24,6 +25,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @Suppress("DEPRECATION")
@@ -39,6 +43,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timer: CountDownTimer
     private var timeInSeconds = 0L
     private lateinit var resetButton: Button
+
+    private val handler = Handler()
+    private val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
+    private val dbWriter = DatabaseIsWrite()
 
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -216,16 +224,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resetTimer() {
+        val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
+
+        val prevTimeInSeconds = timeInSeconds // Зберігаємо попереднє значення часу
+
         isTimerRunning = false
         timer.cancel()
-        timeInSeconds = 0
-        updateTimer()
 
-        val timerTextView = findViewById<TextView>(R.id.timerTextView)
-        timerTextView.text = formatTime(timeInSeconds)
+        handler.postDelayed({
+            timeInSeconds = 0
+            updateTimer()
+            val timerTextView = findViewById<TextView>(R.id.timerTextView)
+            timerTextView.text = formatTime(timeInSeconds)
 
-        val startStopButton = findViewById<Button>(R.id.startStopButton)
-        startStopButton.text = "Start"
+            val startStopButton = findViewById<Button>(R.id.startStopButton)
+            startStopButton.text = "Start"
+
+            // Викликаємо метод для запису в базу даних, передаючи попереднє значення часу
+            GlobalScope.launch(Dispatchers.IO) {
+                dbWriter.databaseIsWrite(2, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds, prevTimeInSeconds)
+            }
+        }, resetDelay)
     }
 
     private fun updateTimer() {

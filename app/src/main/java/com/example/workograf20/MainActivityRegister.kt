@@ -8,117 +8,107 @@ import android.widget.EditText
 import android.hardware.fingerprint.FingerprintManager
 import android.os.CancellationSignal
 import android.content.DialogInterface
+import android.content.SharedPreferences
+import android.graphics.Color.BLACK
+import android.graphics.Color.RED
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.appcompat.app.AlertDialog
+import androidx.preference.PreferenceManager
 
 
+@Suppress("DEPRECATION")
 class MainActivityRegister : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_register)
+
         val registerButton: Button = findViewById(R.id.registerButton)
         val passwordEditText: EditText = findViewById(R.id.passwordEditText)
         val emailEditText: EditText = findViewById(R.id.emailEditText)
+
+        val biometricManager = BiometricManager.from(this)
+
+        // Виклик методу для налаштування біометричної аутентифікації
+        setupBiometricAuthentication()
 
         registerButton.setOnClickListener {
             val passwordValue = passwordEditText.text.toString()
             val emailValue = emailEditText.text.toString()
 
-            val intent = when {
-                passwordValue == "Лев лох" && emailValue == "1" -> Intent(this, MainActivity::class.java)
-                passwordValue == "Лев100%ЛОХ" && emailValue == "2" -> Intent(this, MainActivityUser::class.java)
-                passwordValue == "АдріанТоп" && emailValue == "3" -> Intent(this, MainActivityUser1::class.java)
-                passwordValue == "Володя красавчік " && emailValue == "4" -> Intent(this, MainActivityUser2::class.java)
-                passwordValue == "Лев машина" && emailValue == "5" -> Intent(this, MainActivityUser3::class.java)
-                else -> null // Виконується, якщо введений неправильний пароль або електронна пошта
+            val selectedPageClass = when {
+                passwordValue == "Лев лох" && emailValue == "1" -> MainActivity::class.java.name
+                passwordValue == "Лев100%ЛОХ" && emailValue == "2" -> MainActivityUser::class.java.name
+                passwordValue == "АдріанТоп" && emailValue == "3" -> MainActivityUser1::class.java.name
+                passwordValue == "Володя красавчік " && emailValue == "4" -> MainActivityUser2::class.java.name
+                passwordValue == "Лев машина" && emailValue == "5" -> MainActivityUser3::class.java.name
+                else -> null
             }
 
-            if (intent != null) {
+            if (selectedPageClass != null) {
+                val intent = Intent(this, Class.forName(selectedPageClass))
                 startActivity(intent)
+            } else {
+                passwordEditText.setTextColor(RED)
+                emailEditText.setTextColor(RED)
+
+               // val intent = Intent(this, MainActivityRegister::class.java)
+                //startActivity(intent)
             }
         }
+    }
 
-
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun setupBiometricAuthentication() {
         val biometricManager = BiometricManager.from(this)
         if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
-            // Device supports biometric authentication
-
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Touch ID Authentication")
                 .setDescription("Place your finger on the fingerprint sensor to authenticate")
                 .setNegativeButtonText("Cancel")
                 .build()
 
-            val biometricPrompt = BiometricPrompt(this, mainExecutor, object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    // Authentication successful
-                    val intent = Intent(this@MainActivityRegister, MainActivity::class.java)
-                    startActivity(intent)
-                }
+            val biometricPrompt = BiometricPrompt(
+                this,
+                mainExecutor,
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        val savedSelectedPageClass =
+                            sharedPreferences.getString("selectedPage", null)
+                        savedSelectedPageClass?.let {
+                            startActivity(
+                                Intent(
+                                    this@MainActivityRegister,
+                                    Class.forName(savedSelectedPageClass)
+                                )
+                            )
+                        }
+                    }
 
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    // Authentication error
-                    // Handle error accordingly
-                }
-            })
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        // Handle authentication error
+                    }
+                })
 
             biometricPrompt.authenticate(promptInfo)
         } else {
-            // Device does not support biometric authentication
-            val alertDialog = AlertDialog.Builder(this)
-                .setTitle("Biometric Authentication")
-                .setMessage("фу цей телефон навіть touch id викинь його і купи iPhone") //Your device does not support biometric authentication. Continue with another authentication method?
-                .setPositiveButton("OK") { dialog, _ ->
-                    // Handle OK button click
-                    // You can navigate to another activity or perform other actions here
-                    dialog.dismiss()
-                }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    // Handle Cancel button click
-                    dialog.dismiss()
-                }
-                .create()
-
-            alertDialog.show()
+            showNoBiometricSupportDialog()
         }
+    }
 
-        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
-            // Пристрій підтримує біометричну аутентифікацію
-
-            val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Face ID Authentication")
-                .setDescription("Place your face in front of the front camera to authenticate")
-                .setNegativeButtonText("Cancel")
-                .build()
-
-            val biometricPrompt = BiometricPrompt(this, mainExecutor, object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    // Аутентифікація пройшла успішно
-                    val intent = Intent(this@MainActivityRegister, MainActivityUser::class.java)
-                    startActivity(intent)
-                }
-
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    // Виникла помилка аутентифікації
-                    // Обробте помилку відповідним чином
-                }
-            })
-
-            biometricPrompt.authenticate(promptInfo)
-        } else {
-            // Пристрій не підтримує біометричну аутентифікацію
-            // Ви можете використовувати інший метод аутентифікації або повідомити користувача про відсутність підтримки
+    private fun showNoBiometricSupportDialog() {
+        if (!isFinishing) {
             val alertDialog = AlertDialog.Builder(this)
                 .setTitle("No Biometric Support")
                 .setMessage("Your device does not support biometric authentication.")
-                .setPositiveButton("OK") { _, _ ->
-                    // Обробка події натискання кнопки OK
-                }
+                .setPositiveButton("OK") { _, _ -> /* Handle OK button click */ }
                 .create()
+
             alertDialog.show()
         }
     }

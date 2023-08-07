@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Workograf20"
         tools:targetApi="31">
         <activity
+            android:name=".StatisticsEmployer"
+            android:exported="false" />
+        <activity
             android:name=".StatisticsActivityEmployer"
             android:exported="false" />
         <activity

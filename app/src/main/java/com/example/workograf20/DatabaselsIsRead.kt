@@ -64,6 +64,39 @@ class DatabaselsIsRead {
 
         return result
     }
+
+    fun getTotalTimeAndStatsFromDatabaseEmployer(): Map<String, String> {
+        val user = "coldvl"  // Username for the database
+        val password = "qwertyP1"  // Password for the database
+        val host = "hv305868-001.ca.clouddb.ovh.net"  // Hostname or IP address of the database server
+        val database = "workograph-db-test"  // Name of the database
+        val port = 35967  // Port used for the connection
+
+        val url = "jdbc:mysql://$host:$port/$database"
+        val connection = DriverManager.getConnection(url, user, password)
+
+        val result: MutableMap<String, String> = mutableMapOf()
+
+        try {
+            val query = "SELECT totalTime, period, today, week, month FROM `employees` WHERE id = 2"
+            val statement = connection.createStatement()
+            val resultSet = statement.executeQuery(query)
+
+            if (resultSet.next()) {
+                result["totalTime"] = resultSet.getString("totalTime")
+                result["period"] = resultSet.getString("period")
+                result["today"] = resultSet.getString("today")
+                result["week"] = resultSet.getString("week")
+                result["month"] = resultSet.getString("month")
+            }
+        } catch (e: SQLException) {
+            e.printStackTrace()
+        } finally {
+            connection.close()
+        }
+
+        return result
+    }
 }
 
 /*fun main() {

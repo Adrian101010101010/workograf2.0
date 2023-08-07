@@ -26,6 +26,16 @@ import android.os.Handler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+//LocationMap
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Looper
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 
 @Suppress("DEPRECATION")
 class MainActivityUser : AppCompatActivity() {
@@ -44,11 +54,41 @@ class MainActivityUser : AppCompatActivity() {
     private val handler = Handler()
     private val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
     private val dbWriter = DatabaseIsWrite()
+//LocationMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+
+    private lateinit var textView: TextView
+
+
+
+    companion object {
+        private const val TARGET_LATITUDE = 49.834870 // Задайте цільову широту
+        private const val TARGET_LONGITUDE = 24.021730 // Задайте цільову довготу
+
+        private const val PERMISSION_REQUEST_CODE = 123
+    }
 
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_user)
+
+        //LocationMap
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        textView = findViewById(R.id.textView)
+
+        // Check location permission
+        if (hasLocationPermission()) {
+            requestLocationUpdates()
+        } else {
+            requestLocationPermission()
+        }
+
+
+
+
+
         // Отримайте останнє значення таймера з попередньої активності (якщо таке є)
         timeInSeconds = intent.getLongExtra("timeInSeconds", 0)
 
@@ -301,6 +341,92 @@ class MainActivityUser : AppCompatActivity() {
         startActivity(intent)
     }
 
+//LocationMap
+private fun hasLocationPermission(): Boolean {
+    return ActivityCompat.checkSelfPermission(
+        this,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+}
 
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LocationMap.PERMISSION_REQUEST_CODE
+        )
+    }
+
+    private fun requestLocationUpdates() {
+        val locationRequest = LocationRequest.create().apply {
+            interval = 10000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult.lastLocation?.let { location ->
+                    val currentLocation = LatLng(location.latitude, location.longitude)
+                    val targetLocation = LatLng(
+                        LocationMap.TARGET_LATITUDE,
+                        LocationMap.TARGET_LONGITUDE
+                    )
+
+                    val distance = calculateDistance(currentLocation, targetLocation)
+
+                    if (distance <= 1000) {
+                        textView.text = "On location"
+                    } else {
+                        textView.text = "Not on location"
+                    }
+                }
+            }
+        }
+
+        try {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+
+    // Rest of your code...
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LocationMap.PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestLocationUpdates()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Location permission denied. Unable to track location.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+    private fun calculateDistance(startLocation: LatLng, endLocation: LatLng): Float {
+        val startPoint = Location("startPoint").apply {
+            latitude = startLocation.latitude
+            longitude = startLocation.longitude
+        }
+
+        val endPoint = Location("endPoint").apply {
+            latitude = endLocation.latitude
+            longitude = endLocation.longitude
+        }
+
+        return startPoint.distanceTo(endPoint)
+    }
 
 }
