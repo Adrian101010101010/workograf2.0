@@ -18,7 +18,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -52,7 +51,7 @@ class MainActivityUser : AppCompatActivity() {
 
 
     private val handler = Handler()
-    private val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
+   // private val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
     private val dbWriter = DatabaseIsWrite()
 //LocationMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -63,7 +62,7 @@ class MainActivityUser : AppCompatActivity() {
 
 
     companion object {
-        private const val TARGET_LATITUDE = 49.834870 // Задайте цільову широту
+        const val TARGET_LATITUDE = 49.7779235 // Задайте цільову широту
         private const val TARGET_LONGITUDE = 24.021730 // Задайте цільову довготу
 
         private const val PERMISSION_REQUEST_CODE = 123
@@ -271,6 +270,7 @@ class MainActivityUser : AppCompatActivity() {
         resetButton.isEnabled = isTimerRunning
     }
 
+    @SuppressLint("NewApi")
     private fun resetTimer() {
         val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
 
@@ -377,12 +377,19 @@ private fun hasLocationPermission(): Boolean {
 
                     if (distance <= 1000) {
                         textView.text = "On location"
+                        // Розташування в межах зони, дозволяємо запуск таймера
+                        val startStopButton = findViewById<Button>(R.id.startStopButton)
+                        startStopButton.isEnabled = true
                     } else {
                         textView.text = "Not on location"
+                        // Розташування поза зоною, забороняємо запуск таймера
+                        val startStopButton = findViewById<Button>(R.id.startStopButton)
+                        startStopButton.isEnabled = false
                     }
                 }
             }
         }
+
 
         try {
             fusedLocationClient.requestLocationUpdates(

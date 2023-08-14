@@ -1,9 +1,11 @@
 package com.example.workograf20
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.sql.DriverManager
 import java.sql.SQLException
 
 class DatabaselsIsRead {
-    fun databaseIsRead() {
+    fun databaseIsRead(): List<String> {
         val user = "coldvl"  // Username for the database
         val password = "qwertyP1"  // Password for the database
         val host = "hv305868-001.ca.clouddb.ovh.net"  // Hostname or IP address of the database server
@@ -13,6 +15,8 @@ class DatabaselsIsRead {
         val url = "jdbc:mysql://$host:$port/$database"
         val connection = DriverManager.getConnection(url, user, password)
 
+        val result: MutableList<String> = mutableListOf()
+
         try {
             val query = "SELECT * FROM `employees`"
             val statement = connection.createStatement()
@@ -21,16 +25,19 @@ class DatabaselsIsRead {
             while (resultSet.next()) {
                 val id = resultSet.getInt("id")
                 val name = resultSet.getString("name")
-                val startedTime = resultSet.getTimestamp("startedTime")
-                val totalTime = resultSet.getTimestamp("totalTime")
+                val startedTime = resultSet.getString("startedTime")
+                val totalTime = resultSet.getString("totalTime")
 
-                println("ID: $id, Name: $name, Started Time: $startedTime, Total Time: $totalTime")
+                val formattedRow = " $id, Name: $name, Started Time: $startedTime, Total Time: $totalTime"
+                result.add(formattedRow)
             }
         } catch (e: SQLException) {
             e.printStackTrace()
         } finally {
             connection.close()
         }
+
+        return result
     }
     fun getTotalTimeAndStatsFromDatabase(): Map<String, String> {
         val user = "coldvl"  // Username for the database

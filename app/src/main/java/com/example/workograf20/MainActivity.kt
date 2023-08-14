@@ -59,6 +59,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val button2 = findViewById<Button>(R.id.button2)
+        button2.setOnClickListener {
+            val intent = Intent(this, DatabaseResultActivity::class.java)
+            startActivity(intent)
+        }
+
         drawerLayout = findViewById(R.id.drawerLayout)
         navigationView = findViewById(R.id.navigationView)
 
@@ -223,6 +229,7 @@ class MainActivity : AppCompatActivity() {
         resetButton.isEnabled = isTimerRunning
     }
 
+    @SuppressLint("NewApi")
     private fun resetTimer() {
         val resetDelay = 5000L // Затримка скидання таймера в мілісекундах
 

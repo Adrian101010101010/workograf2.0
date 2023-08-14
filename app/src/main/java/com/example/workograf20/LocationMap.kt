@@ -25,8 +25,8 @@ class LocationMap : AppCompatActivity() {
 
 
     companion object {
-        const val TARGET_LATITUDE = 49.834870 // Задайте цільову широту
-        const val TARGET_LONGITUDE = 24.021730 // Задайте цільову довготу
+        const val TARGET_LATITUDE = 49.7779235 // Задайте цільову широту
+        const val TARGET_LONGITUDE = 23.9477877 // Задайте цільову довготу
 
         const val PERMISSION_REQUEST_CODE = 123
     }

@@ -12,6 +12,8 @@ import android.content.SharedPreferences
 import android.graphics.Color.BLACK
 import android.graphics.Color.RED
 import android.os.Build
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -37,16 +39,39 @@ class MainActivityRegister : AppCompatActivity() {
         // Виклик методу для налаштування біометричної аутентифікації
         setupBiometricAuthentication()
 
+        // Налаштовуємо фокус та обробник для emailEditText
+        emailEditText.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                // Переключаємо фокус на passwordEditText
+                passwordEditText.requestFocus()
+                true // Повертаємо true, щоб вказати, що обробили подію
+            } else {
+                false // Повертаємо false, якщо подія не оброблена
+            }
+        }
+
+        // Тепер використовуємо інший обробник для passwordEditText
+        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Викликати клік на registerButton
+                registerButton.performClick()
+                true // Повертаємо true, щоб вказати, що обробили подію
+            } else {
+                false // Повертаємо false, якщо подія не оброблена
+            }
+        }
+
+
         registerButton.setOnClickListener {
             val passwordValue = passwordEditText.text.toString()
             val emailValue = emailEditText.text.toString()
 
             val selectedPageClass = when {
-                passwordValue == "Лев лох" && emailValue == "1" -> MainActivity::class.java.name
-                passwordValue == "Лев100%ЛОХ" && emailValue == "2" -> MainActivityUser::class.java.name
-                passwordValue == "АдріанТоп" && emailValue == "3" -> MainActivityUser1::class.java.name
-                passwordValue == "Володя красавчік " && emailValue == "4" -> MainActivityUser2::class.java.name
-                passwordValue == "Лев машина" && emailValue == "5" -> MainActivityUser3::class.java.name
+                passwordValue == "1" && emailValue == "1" -> MainActivity::class.java.name
+                passwordValue == "2" && emailValue == "2" -> MainActivityUser::class.java.name
+                passwordValue == "3" && emailValue == "3" -> MainActivityUser1::class.java.name
+                passwordValue == "4 " && emailValue == "4" -> MainActivityUser2::class.java.name
+                passwordValue == "5" && emailValue == "5" -> MainActivityUser3::class.java.name
                 else -> null
             }
 
@@ -56,9 +81,7 @@ class MainActivityRegister : AppCompatActivity() {
             } else {
                 passwordEditText.setTextColor(RED)
                 emailEditText.setTextColor(RED)
-
-               // val intent = Intent(this, MainActivityRegister::class.java)
-                //startActivity(intent)
+                // ...
             }
         }
     }
